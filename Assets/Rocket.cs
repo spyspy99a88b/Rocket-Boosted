@@ -7,12 +7,16 @@ public class Rocket : MonoBehaviour
     AudioSource audioSource;
     bool isTransitioning = false;
     bool collisionsDisabled = false;
+
     [SerializeField] float rcsThrust = 200f;
     [SerializeField] float mainThrust = 50f;
     [SerializeField] float levelLoadDelay = 2f;
     [SerializeField] AudioClip mainEngine;
     [SerializeField] AudioClip success;
     [SerializeField] AudioClip death;
+    [SerializeField] ParticleSystem mainEngineParticles;
+    [SerializeField] ParticleSystem successParticles;
+    [SerializeField] ParticleSystem deathParticles;
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
@@ -64,7 +68,7 @@ public class Rocket : MonoBehaviour
         isTransitioning = true;
         audioSource.Stop();
         audioSource.PlayOneShot(success);
-        // successParticles.Play();
+        successParticles.Play();
         Invoke("LoadNextLevel", levelLoadDelay);
     }
 
@@ -73,7 +77,7 @@ public class Rocket : MonoBehaviour
         isTransitioning = true;
         audioSource.Stop();
         audioSource.PlayOneShot(death);
-        // deathParticles.Play();
+        deathParticles.Play();
         Invoke("LoadFirstLevel", levelLoadDelay);
     }
     void RespondToThrustInput()
@@ -85,6 +89,7 @@ public class Rocket : MonoBehaviour
         else
         {
             audioSource.Stop();
+            mainEngineParticles.Stop();
         }
     }
 
@@ -95,6 +100,7 @@ public class Rocket : MonoBehaviour
         {
             audioSource.PlayOneShot(mainEngine);
         }
+        mainEngineParticles.Play();
     }
 
     void RespondToRotate()
