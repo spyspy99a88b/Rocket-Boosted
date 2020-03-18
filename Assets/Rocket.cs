@@ -6,6 +6,7 @@ public class Rocket : MonoBehaviour
     Rigidbody rigidBody;
     AudioSource audioSource;
     bool isTransitioning = false;
+    bool collisionsDisabled = false;
 
 
     [SerializeField] float rcsThrust = 200f;
@@ -31,11 +32,26 @@ public class Rocket : MonoBehaviour
             RespondToThrustInput();
             RespondToRotate();
         }
+        if (Debug.isDebugBuild)
+        {
+            RespondToDebugKeys();
+        }
+        
     }
-    
+    private void RespondToDebugKeys()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadNextLevel();   
+        }
+        else if (Input.GetKeyDown(KeyCode.C))
+        {
+            collisionsDisabled = !collisionsDisabled; 
+        }
+    }
     void OnCollisionEnter(Collision collision)
     {
-        if (isTransitioning) { return; } //start with false, no further particles after collision
+        if (isTransitioning|| collisionsDisabled) { return; } //transit from flying to death or success 
 
         switch (collision.gameObject.tag)
         {
