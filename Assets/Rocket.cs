@@ -22,8 +22,8 @@ public class Rocket : MonoBehaviour
 
     void Update()
     {
-        Thrust();
-        Rotate();
+        RespondToThrustInput();
+        RespondToRotate();
     }
     
     void OnCollisionEnter(Collision collision)
@@ -76,15 +76,11 @@ public class Rocket : MonoBehaviour
         // deathParticles.Play();
         Invoke("LoadFirstLevel", levelLoadDelay);
     }
-    void Thrust()
+    void RespondToThrustInput()
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            rigidBody.AddRelativeForce(Vector3.up*mainThrust*Time.deltaTime);
-            if (!audioSource.isPlaying)
-            {
-                audioSource.Play();
-            }
+            ApplyThrust();
         }
         else
         {
@@ -92,7 +88,16 @@ public class Rocket : MonoBehaviour
         }
     }
 
-    void Rotate()
+    void ApplyThrust()
+    {
+        rigidBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+        if (!audioSource.isPlaying) //one-time play
+        {
+            audioSource.PlayOneShot(mainEngine);
+        }
+    }
+
+    void RespondToRotate()
     {
         rigidBody.freezeRotation=true; //stable rotate
 

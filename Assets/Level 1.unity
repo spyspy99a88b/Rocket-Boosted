@@ -88,7 +88,8 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 180126d3a5d654e26b20c8fe13c6e940,
+    type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
@@ -288,6 +289,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 35433495055232867, guid: 782835d2dc3d34fe3ba078b2d0a12e36,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -7.2
+      objectReference: {fileID: 0}
     - target: {fileID: 100819973103627402, guid: 782835d2dc3d34fe3ba078b2d0a12e36,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -347,6 +353,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Terrain Obstacles
+      objectReference: {fileID: 0}
+    - target: {fileID: 4906969936626193885, guid: 782835d2dc3d34fe3ba078b2d0a12e36,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 782835d2dc3d34fe3ba078b2d0a12e36, type: 3}
