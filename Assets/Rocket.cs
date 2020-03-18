@@ -6,7 +6,7 @@ public class Rocket : MonoBehaviour
     Rigidbody rigidBody;
     AudioSource audioSource;
     bool isTransitioning = false;
-    bool collisionsDisabled = false;
+
 
     [SerializeField] float rcsThrust = 200f;
     [SerializeField] float mainThrust = 50f;
@@ -26,18 +26,20 @@ public class Rocket : MonoBehaviour
 
     void Update()
     {
-        RespondToThrustInput();
-        RespondToRotate();
+        if (!isTransitioning)
+        {
+            RespondToThrustInput();
+            RespondToRotate();
+        }
     }
     
     void OnCollisionEnter(Collision collision)
     {
-        //if (isTransitioning || collisionsDisabled) { return; }
+        if (isTransitioning) { return; } //start with false, no further particles after collision
 
         switch (collision.gameObject.tag)
         {
             case "Friendly":
-                // do nothing
                 break;
             case "Finish":
                 StartSuccessSequence();
@@ -46,22 +48,6 @@ public class Rocket : MonoBehaviour
                 StartDeathSequence();
                 break;
         }
-    }
-
-    private void LoadNextLevel()
-    {
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        int nextSceneIndex = currentSceneIndex + 1;
-        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings) //no levels remain
-        {
-            nextSceneIndex = 0; 
-        }
-        SceneManager.LoadScene(nextSceneIndex);
-    }
-
-    private void LoadFirstLevel()
-    {
-        SceneManager.LoadScene(0);
     }
     private void StartSuccessSequence()
     {
@@ -80,6 +66,23 @@ public class Rocket : MonoBehaviour
         deathParticles.Play();
         Invoke("LoadFirstLevel", levelLoadDelay);
     }
+
+    private void LoadNextLevel()
+    {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextSceneIndex = currentSceneIndex + 1;
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings) //no levels remain
+        {
+            nextSceneIndex = 0; 
+        }
+        SceneManager.LoadScene(nextSceneIndex);
+    }
+
+    private void LoadFirstLevel()
+    {
+        SceneManager.LoadScene(0);
+    }
+    
     void RespondToThrustInput()
     {
         if (Input.GetKey(KeyCode.Space))
@@ -88,7 +91,7 @@ public class Rocket : MonoBehaviour
         }
         else
         {
-            audioSource.Stop();
+            audioSource.Stop(); //boosting music and particles stop
             mainEngineParticles.Stop();
         }
     }
@@ -96,7 +99,7 @@ public class Rocket : MonoBehaviour
     void ApplyThrust()
     {
         rigidBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
-        if (!audioSource.isPlaying) //one-time play
+        if (!audioSource.isPlaying) //one-time play, no overlaps
         {
             audioSource.PlayOneShot(mainEngine);
         }
